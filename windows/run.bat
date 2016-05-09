@@ -1,2 +1,2 @@
 cd ..
-nodemon index.js
+nodemon index.js || node index.js
