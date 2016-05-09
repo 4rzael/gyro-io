@@ -11,7 +11,7 @@ body {
 	font-family: helvetica, arial, sans serif;
 }
 #sphere {
-	position: absolute;	
+	position: absolute;
 	width: 50px;
 	height: 50px;
 	border-radius: 50px;
@@ -22,8 +22,8 @@ body {
 </head>
 
 <body>
-<div id="content">
-    <h1>Accelerometer Javascript Test</h1>
+<div>
+    <h1 id="mainText">Accelerometer Javascript Test</h1>
     <div id="sphere"></div>
 <ul>
 	<li>acceleration x: <span id="accelerationX"></span> g</li>
@@ -39,67 +39,7 @@ test: <span id="test"></span>
 
 <script src="/socket.io/socket.io.js"></script>
 
-<script type="text/javascript">
-
-// des variables pour bouger la sphère (accéleration, vitesse, position)
-var x = 0, y = 0,
-    vx = 0, vy = 0,
-	ax = 0, ay = 0;
-	
-// établit une connexion temps réel avec le serveur
-var socket = io();
-
-var sphere = document.getElementById("sphere");
-
-// quand un message de type 'gyro' arrive depuis le serveur
-socket.on('gyro', function (data) {
-
-	// récupère et affiche les données
-	ax = data.acceleration.x * 5;
-	ay = data.acceleration.y * 5;
-	document.getElementById("accelerationX").innerHTML = data.acceleration.x;
-	document.getElementById("accelerationY").innerHTML = data.acceleration.y;
-	document.getElementById("accelerationZ").innerHTML = data.acceleration.z;
-
-	if ( data.rotationRate ) {
-		document.getElementById("rotationAlpha").innerHTML = data.rotationRate.alpha;
-		document.getElementById("rotationBeta").innerHTML = data.rotationRate.beta;
-		document.getElementById("rotationGamma").innerHTML = data.rotationRate.gamma;
-	}
-});
-
-// bouge la balle (40 fois par secondes)
-setInterval( function() {
-	var landscapeOrientation = window.innerWidth/window.innerHeight > 1;
-	if ( landscapeOrientation) {
-		vx = vx + ay;
-		vy = vy + ax;
-	} else {
-		vy = vy - ay;
-		vx = vx + ax;
-	}
-	vx = vx * 0.98;
-	vy = vy * 0.98;
-	y = parseInt(y + vy / 50);
-	x = parseInt(x + vx / 50);
-	
-	boundingBoxCheck();
-	
-	sphere.style.top = y + "px";
-	sphere.style.left = x + "px";
-	
-}, 25);
-
-// fait rebondir la balle sur les bords
-function boundingBoxCheck(){
-	if (x<0) { x = 0; vx = -vx; }
-	if (y<0) { y = 0; vy = -vy; }
-	if (x>document.documentElement.clientWidth-20) { x = document.documentElement.clientWidth-20; vx = -vx; }
-	if (y>document.documentElement.clientHeight-20) { y = document.documentElement.clientHeight-20; vy = -vy; }
-	
-}
-
-</script>
+<script src="/src/web.js"></script>
 
 </body>
 </html>

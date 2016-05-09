@@ -14,40 +14,19 @@ body {
 </head>
 
 <body>
+
 <div id="content">
     <h1>Move your phone, and have some fun</h1>
 </div>
 
+<form>
+  Enter the sync number:
+  <input type="number" name="syncNumber" id="syncNumber" min="0" max="99999">
+</form>
+<button id="syncButton" type="button" onclick="sendSyncNumber()">Sync !</button>
+
 <script src="/socket.io/socket.io.js"></script>
-
-<script type="text/javascript">
-
-// etablit une connexion temps réel
-var socket = io();
-	
-// s'il y a un gyroscope/accelerometre
-if (window.DeviceMotionEvent != undefined) {
-
-	// quand le portable bouge
-	window.ondevicemotion = function(e) {
-		// envoie les infos au serveur via un message de "type" 'gyro'.
-		socket.emit('gyro',
-			{
-				acceleration: {
-					x: event.accelerationIncludingGravity.x,
-					y: event.accelerationIncludingGravity.y,
-					z: event.accelerationIncludingGravity.z
-				},
-				rotationRate: e.rotationRate ? {
-					alpha: e.rotationRate.alpha,
-					beta: e.rotationRate.alpha,
-					gamma: e.rotationRate.alpha
-				} : undefined
-			});
-	}
-} 
-
-</script>
+<script src="/src/phone.js"></script>
 
 </body>
 </html>
