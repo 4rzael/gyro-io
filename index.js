@@ -6,17 +6,16 @@ var server = require('http').createServer(app);
 
 var io = require('socket.io')(server);
 
-// lit les fichiers HTML à envoyer aux clients
+// récupère le nom complet du sous-dossier public/
 var path = require('path');
-var fs = require('fs');
 var publicFolder = path.join(__dirname, 'public');
+
+// toutes les requêtes à des fichiers (html, js, css, etc) iront les chercher dans le dossier public
+app.use(express.static(publicFolder));
 
 // permet de detecter si PC ou mobile
 var device = require('express-device');
 app.use(device.capture());
-
-// toutes les requêtes à des fichiers (js, css, etc) iront les chercher dans le dossier public
-app.use(express.static(publicFolder));
 
 // si on se connecte sur www.monsite.com/
 app.get('/', function(req, res) {
