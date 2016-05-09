@@ -7,22 +7,26 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 
 // lit les fichiers HTML a envoyer aux clients
+var path = require('path');
 var fs = require('fs');
-var phone = fs.readFileSync('./phone.html');
-var web = fs.readFileSync('./web.html');
+var publicFolder = path.join(__dirname, 'public');
+var phoneHTML = path.join(publicFolder, 'phone.html');
+var webHTML = path.join(publicFolder, 'web.html');
 
 // permet de detecter si PC ou mobile
 var device = require('express-device');
-// app.use(bodyParser());
 app.use(device.capture());
 
-// si on se connecte sur www.monsite.com
+// toutes les requêtes à des fichiers (js, css, etc) iront les chercher dans le dossier public
+app.use(express.static(publicFolder));
+
+// si on se connecte sur www.monsite.com/
 app.get('/', function(req, res) {
 	// verifie le type d'appareil
 	if (req.device.type === 'tablet' || req.device.type === 'phone')
-		res.send(phone.toString());
+		res.sendFile(phoneHTML);
 	else
-		res.send(web.toString());
+		res.sendFile(webHTML);
 });
 
 // quand une connexion socket.io (communication temps réel) arrive
