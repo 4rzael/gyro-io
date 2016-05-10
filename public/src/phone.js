@@ -4,7 +4,7 @@
 var socket = io();
 var syncNumber = undefined;
 
-var needToSendGyro = false;
+var gyroDataToSend = undefined;
 
 // s'il y a un gyroscope/accelerometre
 if (window.DeviceMotionEvent !== undefined) {
@@ -14,29 +14,29 @@ if (window.DeviceMotionEvent !== undefined) {
   	if (syncNumber === undefined)
   		return;
 
-    needToSendGyro = true;
+    gyroDataToSend = e;
   };
   // envoie les données du gyroscope jusqu'a 10x par seconde
   // (limite pour éviter une trop grand consomation de données)
   // (et encore, c'est beaucoup)
   setInterval(function () {
-    if (needToSendGyro) {
+    if (gyroDataToSend !== undefined) {
       // envoie les infos au serveur via un message de "type" 'gyro'.
       socket.emit('gyro',
         {
           acceleration: {
-            x: event.accelerationIncludingGravity.x,
-            y: event.accelerationIncludingGravity.y,
-            z: event.accelerationIncludingGravity.z
+            x: gyroDataToSend.accelerationIncludingGravity.x,
+            y: gyroDataToSend.accelerationIncludingGravity.y,
+            z: gyroDataToSend.accelerationIncludingGravity.z
           },
-          rotationRate: e.rotationRate ? {
-            alpha: e.rotationRate.alpha,
-            beta: e.rotationRate.alpha,
-            gamma: e.rotationRate.alpha
+          rotationRate: gyroDataToSend.rotationRate ? {
+            alpha: gyroDataToSend.rotationRate.alpha,
+            beta: gyroDataToSend.rotationRate.alpha,
+            gamma: gyroDataToSend.rotationRate.alpha
           } : undefined
         });
     }
-    needToSendGyro = false;
+    gyroDataToSend = undefined;
   }, 100);
 
 }
