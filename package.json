@@ -3,6 +3,9 @@
   "version": "2.1.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "4.4.4"
+  },
   "dependencies": {
     "express": "^4.13.4",
     "express-device": "^0.4.2",
